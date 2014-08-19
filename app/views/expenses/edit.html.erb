@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(@expense, controller: "Expenses", action: "update", html: { method: "put", class: 'form-horizontal', role: 'form' }) do |f| %>
+    <%= render 'shared/exp_error_messages' %>
+
+      <span id="error_msg5" class="error_msg"></span><br />
+      <%= f.label :amount %>
+      <%= f.number_field :amount, class: "text_field", step: "any", :value => (number_with_precision(f.object.amount, :precision => 2) || 0) %><br />
+
+      <span id="error_msg7" class="error_msg"></span><br />
+      <%= f.label :category %>
+      <%= f.select :category, options_for_select(Expense::CATEGORY, @expense.category) %><br />
+
+      <%= f.label :date %><br />
+      <%= f.datetime_select :date %><br />
+
+      <%= f.label :description %>
+      <%= f.text_field :description, class: "form-control" %><br />
+
+      <div class="modal-footer">
+        <%= f.submit "Save changes", class: "btn btn-primary"%>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+
+    <% end %>
+  </div>
+</div>
+
+<script>
+  $("document").ready(function(){
+    $("form").submit(function(event) {
+
+      $('.error_msg').text("");
+
+      if($("#expense_amount").val() === ''){
+        $("#error_msg5").text("Please enter the amount");
+        event.preventDefault();
+      } 
+
+      if(parseInt($("#expense_amount").val()) <= 0){
+        $("#error_msg5").text("Please enter a positive value for amount");
+        event.preventDefault();
+      }
+
+      if(parseInt($("#expense_category").val()) === 0){
+        $("#error_msg7").text("Please choose a category");
+        event.preventDefault();
+      }  
+        
+    });
+  });
+</script>

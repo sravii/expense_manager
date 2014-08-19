@@ -1,0 +1,120 @@
+<h4>Current month's expenses : Rs <%= sprintf( "%0.02f", @sum) %></h4>
+
+<% def start_of_month
+    Time.parse(Time.now.strftime("%Y-%m-01")).to_s(:db)
+   end
+
+   def end_of_month
+    Time.parse(Time.now.strftime("%Y-%m-31")).to_s(:db)
+   end %>
+
+<% $arr = current_user.expenses.where("date between ? and ?",start_of_month,end_of_month).group(:category).sum(:amount).map { |key, value| [Expense::CATEGORY_BY_VALUE[key],value] } %>
+
+<script type="text/javascript" charset="utf-8">
+ $(function () {
+    $('#some_chart').highcharts({
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Category-wise Expenditure'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y}</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Amount',
+            data: <%= $arr.to_json.html_safe %>
+        }]
+    });
+});
+</script>
+
+<div id="some_chart" style="width:500px; height:400px;"></div>
+
+<h4>Reminders due to be paid</h4>
+
+<table class="table table-hover">
+  <tr>
+    <th>Category</th>
+    <th>Description</th>
+    <th>Alert Threshold</th>
+    <th>Frequency</th>
+    <th>Last pay date</th>
+    <th>Next pay date</th>
+    <th>Days left</th>
+    <th></th>
+  </tr>
+
+  <% @reminders.each do |reminder| %>
+    <% if reminder.alert_off == false %>
+      <tr>
+        <td><%= Reminder::CATEGORY_BY_VALUE[reminder.category] %></td>
+        <td><%= reminder.description %></td>
+        <td><%= reminder.alert_theshold %></td>
+        <td><%= reminder.frequency %></td>
+        <td><%= reminder.last_pay_date.strftime("%B #{reminder.last_pay_date.day.ordinalize}, %Y") %></td>
+        <td><%= reminder.next_pay_date.strftime("%B #{reminder.next_pay_date.day.ordinalize}, %Y") %></td>
+        <td><%= (reminder.next_pay_date - Date.today).to_i %></td>
+        <td>
+          <%= link_to 'Paid', paid_reminder_path(reminder), class: "btn btn-default", "data-toggle" => "modal", :data => {:target => "#myModal6"} %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<div id="myModal6" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Add to expenses</h4>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+</div>
+<!-- <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Catogry', 'Amount'],
+      ['Food', 123],
+      ['Electricity Bill', 0],
+      ['Phone Bill', 300],
+      ['Health', 700],
+      ['Transportation', 0],
+      ['Leisure', 0],
+      ['Others', 0]
+    ]);
+
+    var options = {
+      title: 'Category-wise expenses',
+      is3D: true,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+    chart.draw(data, options);
+  }
+</script> -->

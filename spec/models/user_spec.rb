@@ -22,7 +22,7 @@ require 'spec_helper'
 
 describe User do
 
-  before { @user = User.new(name: "Eg user", email: "user@eg.com", password: "foobar", password_confirmation: "foobar") }
+  before { @user = User.new(name: "Eg user", email: "user@eg.com", password: "foobar11", password_confirmation: "foobar11") }
 
   subject { @user }
 
@@ -33,12 +33,12 @@ describe User do
   it { should respond_to(:password_confirmation) }
 
   describe "when name is not present" do
-    before { @user.name = " " }
+    before { @user.name = "" }
     it { should_not be_valid }
   end
 
   describe "when email is not present" do
-    before { @user.email = " " }
+    before { @user.email = "" }
     it { should_not be_valid }
   end
 
@@ -94,7 +94,7 @@ describe User do
   end
 
   describe "with a password that's too short" do
-    before { @user.password = @user.password_confirmation = "a" * 6 }
+    before { @user.password = @user.password_confirmation = "a" * 7 }
     it { should be_invalid }
   end
 
@@ -119,27 +119,51 @@ describe User do
   #   its(:remember_token) { should_not be_blank }
   # end
 
-  # describe "micropost associations" do
+  describe "expense associations" do
     
-  #   before { @user.save }
-  #   let!(:older_micropost) do 
-  #     FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
-  #   end
-  #   let!(:newer_micropost) do
-  #     FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
-  #   end
+    before { @user.save }
+    let!(:older_expense) do 
+      FactoryGirl.create(:expense, user: @user, created_at: 1.day.ago)
+    end
+    let!(:newer_expense) do
+      FactoryGirl.create(:expense, user: @user, created_at: 1.hour.ago)
+    end
         
-  #   it "should have the right microposts in the right order" do
-  #     @user.microposts.should == [newer_micropost, older_micropost]
-  #   end
+    it "should have the right expenses in the right order" do
+      @user.expenses.should == [newer_expense, older_expense]
+    end
 
-  #   it "should destroy associated microposts" do
-  #     microposts = @user.microposts.dup
-  #     @user.destroy
-  #     microposts.should_not be_empty
-  #     microposts.each do |micropost|
-  #       Micropost.find_by_id(micropost.id).should be_nil
-  #     end
-  #   end
-  # end
+    it "should destroy associated expenses" do
+      expenses = @user.expenses.dup
+      @user.destroy
+      expenses.should_not be_empty
+      expenses.each do |expense|
+        Expense.find_by_id(expense.id).should be_nil
+      end
+    end
+  end
+
+  describe "reminder associations" do
+    
+    before { @user.save }
+    let!(:older_reminder) do 
+      FactoryGirl.create(:reminder, user: @user, created_at: 1.day.ago)
+    end
+    let!(:newer_reminder) do
+      FactoryGirl.create(:reminder, user: @user, created_at: 1.hour.ago)
+    end
+        
+    # it "should have the right reminders in the right order" do
+    #   @user.reminder.should == [newer_reminder, older_expense]
+    # end
+
+    it "should destroy associated reminders" do
+      reminders = @user.reminders.dup
+      @user.destroy
+      # reminders.should_not be_empty
+      reminders.each do |reminder|
+        Reminder.find_by_id(reminder.id).should be_nil
+      end
+    end
+  end
 end

@@ -1,34 +1,8 @@
 <div class="row">
   <div class="span6 offset3">
-    <%= form_for(@reminder, controller: "Reminders", action: "create", html: { method: "post", role: 'form' }) do |f| %>
-    <%= render 'shared/rem_error_messages' %>
-      <div class="form-group">
-        <span id="error_msg8" class="error_msg"></span><br />
-        <%= f.label :category %>
-        <%= f.select :category, options_for_select(Reminder::CATEGORY) %><br />
-      </div>
-
-      <%= f.label :description %>
-      <%= f.text_field :description, class: 'form-control' %><br />
-
-      <span id="error_msg9" class="error_msg"></span><br />
-      <%= f.label :frequency %>
-      <%= f.select :frequency, options_for_select(Reminder::FREQ) %><br />
-
-      <div class="form-group">
-        <span id="error_msg1" class="error_msg"></span><br />
-        <%= f.label :alert_theshold, "Alert Threshold" %>
-        <%= f.number_field :alert_theshold, class: "text_field" %>
-        <%= f.label :alert_theshold, "Days" %><br />
-      </div>
-
-      <span id="error_msg12" class="error_msg"></span><br />
-      <%= f.label :last_pay_date %>
-      <%= f.text_field :last_pay_date, class: 'datepicker', databehaviour:'datepicker' %><br />
-
-      <span id="error_msg13" class="error_msg"></span><br />
-      <%= f.label :next_pay_date %>
-      <%= f.text_field :next_pay_date, class: 'datepicker', databehaviour:'datepicker' %><br />
+    <%= form_for(@item, remote: true, controller: "Reminders", action: "create", html: { method: "post", role: 'form', class: 'remote-form' }) do |f| %>
+      
+      <%= render :partial => "reminder_form", :locals=>{:f => f } %>
 
       <div class="modal-footer">
       	<%= f.submit "Add", class: "btn btn-primary"%>
@@ -42,43 +16,8 @@
 <script>
   $("document").ready(function(){
     $("form").submit(function(event) {
-
-      $('.error_msg').text("");
-
-      if($("#reminder_alert_theshold").val() === ''){
-        $("#error_msg1").text("Please enter the alert threshold");
-        event.preventDefault();
-      } 
-
-      if(parseInt($("#reminder_alert_theshold").val()) < 0){
-        $("#error_msg1").text("Please enter a positive value");
-        event.preventDefault();
-      }    
-
-      if(parseInt($("#reminder_category").val()) === 0){
-        $("#error_msg8").text("Please choose a category");
-        event.preventDefault();
-      }
-
-      if(parseInt($("#reminder_frequency").val()) === -1){
-        $("#error_msg9").text("Please choose a frequency");
-        event.preventDefault();
-      }
-
-      if($("#reminder_last_pay_date").val() === ''){
-        $("#error_msg12").text("Please choose the last pay date");
-        event.preventDefault();
-      }
-
-      if($("#reminder_next_pay_date").val() === ''){
-        $("#error_msg13").text("Please choose the next pay date");
-        event.preventDefault();
-      }
-
+      $('.text-danger').text("");
     });
-
-    $(".datepicker").datepicker();
-
   });
 </script>
 

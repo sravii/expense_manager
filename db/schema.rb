@@ -11,13 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140813081258) do
+ActiveRecord::Schema.define(:version => 20140825120414) do
 
   create_table "expenses", :force => true do |t|
     t.integer  "user_id"
     t.float    "amount"
     t.integer  "category"
-    t.datetime "date"
     t.string   "description"
     t.integer  "reminder_id"
     t.datetime "created_at",  :null => false
@@ -27,14 +26,13 @@ ActiveRecord::Schema.define(:version => 20140813081258) do
   create_table "reminders", :force => true do |t|
     t.integer  "user_id"
     t.string   "description"
-    t.integer  "alert_theshold"
+    t.integer  "alert_threshold"
     t.integer  "frequency"
     t.integer  "category"
-    t.boolean  "alert_off"
     t.date     "next_pay_date"
     t.date     "last_pay_date"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "users", :force => true do |t|

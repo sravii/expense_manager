@@ -9,4 +9,17 @@ module ApplicationHelper
       "#{base_title} | #{page_title}"
     end
   end
+
+  def human_datetime(date)
+    date.strftime("%B #{date.day.ordinalize}, %Y at %I:%M %p")
+  end
+
+  def human_date(date)
+    if(date)
+      date.strftime("%B #{date.day.ordinalize}, %Y")
+    else
+      ""
+    end
+  end
+  
 end

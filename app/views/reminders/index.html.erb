@@ -1,17 +1,36 @@
 <% provide(:title, 'Reminders') %>
 <h1>Reminders</h1>
 
-<%= render 'reminders/display' %> 
+<%= paginate @items %>
+
+<% if @items.empty? %>
+<br /><br /><h3 class = 'center'>You do not have any reminders to be displayed. <br /><br />Pay your bills on time<br />by adding a reminder for the same.</h3><br /><br />
+<% else %>
+<table class="table table-hover">
+  <tr>
+    <th>Category</th>
+    <th>Description</th>
+    <th>Alert Threshold</th>
+    <th>Frequency</th>
+    <th>Last pay date</th>
+    <th>Next pay date</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%= render @items %>
+</table>
+<% end %>
 
 <div class="center hero-unit">
   <a href="/reminders/new" 
           class="btn btn-large btn-primary" 
           data-toggle="modal" 
-          data-target="#myModal2">
+          data-target="#add_reminder_modal">
       Add a new reminder</a>
 </div>
 
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="add_reminder_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -26,8 +45,12 @@
 <script>
   $("document").ready(function(){
 
-    $('#myModal2').on('show.bs.modal', function (e) {
-      $('.error_msg').text("");
+    $('#add_reminder_modal').on('show.bs.modal', function (e) {
+      $('.text-danger').text("");
+    });
+
+    $('#add_reminder_modal').on('hidden.bs.modal', function () {
+      $(this).removeData('bs.modal');
     });
 
   });

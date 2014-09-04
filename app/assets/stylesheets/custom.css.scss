@@ -45,7 +45,7 @@ textarea {
 /* Error messages */
 
 .error_msg {
-  color: red;
+  color: #D8000C;
 }
 
 /* miscellaneous */
@@ -89,6 +89,12 @@ h4 {
   margin: 0px 0px 20px -30px;
 }
 
-.datepicker, .datetimepicker {
-  z-index: 1200 !important; 
+/* Date and Time input fields */
+
+.date {
+  width: 28%;
+}
+
+.datetime {
+  width: 39%;
 }

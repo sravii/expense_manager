@@ -1,0 +1,22 @@
+<span id="reminder_category_error" class="text-danger"></span><br />
+<%= f.label :category %>
+<%= f.select :category, options_for_select(Reminder::CATEGORY.map { |k,v| [v,k] }, @item.category), :include_blank => true %><br />
+
+<%= f.label :description %>
+<%= f.text_field :description, class: "form-control" %><br />
+
+<span id="reminder_frequency_error" class="text-danger"></span><br />
+<%= f.label :frequency %>
+<%= f.select :frequency, options_for_select(Reminder::FREQ.map { |k,v| [v,k] }, @item.frequency), :include_blank => true %><br />
+
+<span id="reminder_alert_threshold_error" class="text-danger"></span><br />
+<%= f.label :alert_threshold, "Alert Threshold" %>
+<%= f.number_field :alert_threshold, class: "text_field" %>
+<%= f.label :alert_threshold, "Days" %><br />
+
+<%= f.label :last_pay_date %>
+<input type = "date" class="date" name = "reminder[last_pay_date]" value = "<%= @item.last_pay_date %>"></input><br />
+
+<span id="reminder_next_pay_date_error" class="text-danger"></span><br />
+<%= f.label :next_pay_date %>
+<input type = "date" class="date" name = "reminder[next_pay_date]" value = "<%= @item.next_pay_date %>" id = "next_pay_date"></input>

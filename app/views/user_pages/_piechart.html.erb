@@ -1,0 +1,40 @@
+<% $arr = current_user.expenses.currentMonth.group(:category).sum(:amount).map { |key, value| [Expense::CATEGORY[key],value] } %>
+
+<script type="text/javascript" charset="utf-8">
+ $(function () {
+    $('#some_chart').highcharts({
+        chart: {
+            type: 'pie',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Category-wise Expenditure'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y}</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Amount',
+            data: <%= $arr.to_json.html_safe %>
+        }]
+    });
+});
+</script>
+
+<div id="some_chart" style="width:500px; height:400px;"></div>

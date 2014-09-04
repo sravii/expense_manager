@@ -1,21 +1,12 @@
 <div class="row">
   <div class="span6 offset3">
-    <%= form_for(@expense, controller: "Expenses", action: "create", html: { method: "post", class: 'form-horizontal', role: 'form' } ) do |f| %>
-    <%= render 'shared/exp_error_messages' %>
-
-      <span id="error_msg4" class="error_msg"></span><br />
-      <%= f.label :amount %>
-      <%= f.number_field :amount, step: "any", class: 'text_field' %><br />
-
-      <span id="error_msg6" class="error_msg"></span><br />
+    <%= form_for(@item, remote: true, controller: "Expenses", action: "create", html: { method: "post", class: 'form-horizontal remote-form', role: 'form' } ) do |f| %>
+    
+    <span id="expense_category_error" class="text-danger"></span><br />
       <%= f.label :category %>
-      <%= f.select :category, options_for_select(Expense::CATEGORY) %><br />
+      <%= f.select :category, options_for_select(Expense::CATEGORY.map { |k,v| [v,k] }), :include_blank => true %><br />
 
-      <%= f.label :date %><br />
-      <%= f.datetime_select :date %><br />
-
-      <%= f.label :description %>
-      <%= f.text_field :description, class: 'form-control' %><br />
+    <%= render :partial => "expenses/common_form", :locals=>{:f => f } %>
 
       <div class="modal-footer">
         <%= f.submit "Add", class: "btn btn-primary"%>
@@ -29,27 +20,7 @@
 <script>
   $("document").ready(function(){
     $("form").submit(function(event) {
-
-      $('.error_msg').text("");
-
-      if($("#expense_amount").val() === ''){
-        $("#error_msg4").text("Please enter the amount");
-        event.preventDefault();
-      }
-
-      if(parseInt($("#expense_amount").val()) <= 0){
-        $("#error_msg4").text("Please enter a positive value for amount");
-        event.preventDefault();
-      }
-      // alert(parseInt($("#expense_category").val()));
-
-      if(parseInt($("#expense_category").val()) === 0){
-        $("#error_msg6").text("Please choose a category");
-        event.preventDefault();
-      }
-      // event.preventDefault();
-
+      $('.text-danger').text("");
     });
-
   });
 </script>

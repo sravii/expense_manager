@@ -15,50 +15,39 @@
 
 class Expense < ActiveRecord::Base
 	
-  attr_accessible :amount, :category, :date, :description, :reminder_id
+  attr_accessible :amount, :category, :description, :reminder_id, :created_at
 
   validates :user_id, presence: true
 
-  after_create :has_reminder_been_associated
+  after_create :update_pay_dates
 
-
-  validates :category, presence: true
-  validates :date, presence: true
-  validates :amount, presence: true
+  validates :category, presence: { message: "Please choose a category" }
+  validates :amount, presence: { message: "Please enter an amount" }, numericality: { greater_than: 0, message: "Please enter a positive value for amount" }
+  validates :created_at, presence: { message: "Please select a date and time" }
 
   belongs_to :user
   belongs_to :reminder
 
-  default_scope order: 'expenses.date DESC'
+  default_scope order('created_at DESC')
+  # scope :food, where(category: 1)
 
-  CATEGORY = [['-----------', 0],
-              ['Electricity Bill',1],
-              ['Phone Bill', 2],
-              ['Health', 3],
-              ['Transportaion',4],
-              ['Leisure', 5],
-              ['Food', 6],
-              ['Others', 7]]
+  scope :currentMonth, where("created_at >= ?", Time.zone.now.beginning_of_month)
 
-  CATEGORY_BY_VALUE = Hash[*CATEGORY.map { |i| [i[1], i[0]] }.flatten]
-
+  CATEGORY = {
+           1 => 'Food',
+           2 => 'Electricity Bill',
+           3 => 'Phone Bill',
+           4 => 'Health',
+           5 => 'Transportaion',
+           6 => 'Leisure',
+           7 => 'Others' }
+  
   # Callbacks for create
   # Check if the reminder has been associated.
   # If so update the reminder, with last_pay_date.
 
-  def has_reminder_been_associated
-    unless reminder.nil?
-      case reminder.frequency
-        when 0
-          # Do nothing
-        when 1
-          reminder.next_pay_date = reminder.next_pay_date + 1.months
-        when 4
-          reminder.next_pay_date = reminder.next_pay_date + 4.months
-        when 12
-          reminder.next_pay_date = reminder.next_pay_date + 12.months
-      end
-      reminder.update_attributes(:last_pay_date => date, :next_pay_date => reminder.next_pay_date )
-    end
+  def update_pay_dates
+    reminder.update_attributes(:last_pay_date => created_at, :next_pay_date => reminder.next_pay_date + (reminder.frequency).months ) unless reminder.nil?
   end
+  
 end

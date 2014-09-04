@@ -11,7 +11,8 @@
 		  <%= f.label :email %><br />
 		  <%= f.email_field :email %><br />
 
-		  <%= f.label :password %><br />
+		  <%= f.label :password, "Password" %><br />
+		  <i>(8 characters minimum)<br /></i>
 		  <%= f.password_field :password, autocomplete: "off" %><br />
 
 		  <%= f.label :password_confirmation %><br />

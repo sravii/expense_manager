@@ -15,3 +15,16 @@
 //= require bootstrap
 //= require bootstrap-datepicker
 //= require_tree .
+
+ERR_MSGS = {
+       		AMOUNT_MISSING: "Please enter an amount",
+       		AMOUNT_INVALID: "Please enter a positive value for amount",
+       		CATEGORY_MISSING: "Please choose a category",
+       		DATETIME_MISSING: "Please choose a date and time",
+       		FREQ_MISSING: "Please choose a frequency",
+       		THRESHOLD_MISSING: "Please enter a threshold value",
+       		THRESHOLD_INVALID: "Please enter a positive value for threshold",
+       		DATE_MISSING: "Please choose the next pay"
+        }
+
+

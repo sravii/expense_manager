@@ -1,18 +1,9 @@
 <div class="row">
   <div class="span6 offset3">
 
-    <%= form_for(@expense, controller: "Expenses", action: "create", html: { method: "post", class: 'form-horizontal', role: 'form' }) do |f| %>
-    <%= render 'shared/exp_error_messages' %>
+    <%= form_for(@expense, remote: true, controller: "Expenses", action: "create", html: { method: "post", class: 'form-horizontal remote-form', role: 'form' }) do |f| %>
 
-      <span id="error_msg3" class="error_msg"></span><br />
-      <%= f.label :amount %>
-      <%= f.number_field :amount, class: "text_field", step: "any" %><br />
-
-      <%= f.label :date %><br />
-      <%= f.datetime_select :date %><br />
-
-      <%= f.label :description %>
-      <%= f.text_field :description, class: "form-control" %><br />
+      <%= render :partial => "expenses/common_form", :locals=>{:f => f } %>
 
       <%= f.hidden_field :reminder_id %>
 
@@ -31,19 +22,7 @@
 <script>
   $("document").ready(function(){
     $("form").submit(function(event) {
-
-      $('.error_msg').text("");
-
-      if($("#expense_amount").val() === ''){
-        $("#error_msg3").text("Please enter the amount");
-        event.preventDefault();
-      } 
-
-      if(parseInt($("#expense_amount").val()) <= 0){
-        $("#error_msg3").text("Please enter a positive value for amount");
-        event.preventDefault();
-      }
-
+      $('.text-danger').text("");
     });
   });
 </script>

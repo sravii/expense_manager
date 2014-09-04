@@ -16,36 +16,35 @@
 #
 
 class Reminder < ActiveRecord::Base
-  attr_accessible :alert_off, :alert_theshold, :boolean, :category, :description, :frequency, :last_pay_date, :next_pay_date
+  attr_accessible :alert_threshold, :category, :description, :frequency, :last_pay_date, :next_pay_date
   belongs_to :user
 
-  has_many :expenses, dependent: :destroy
+  has_many :expenses
 
   validates :user_id, presence: true
 
-  validates :category, presence: true
-  validates :alert_theshold, presence: true
-  validates :frequency, presence: true
-  validates :next_pay_date, presence: true
+  validates :category, presence: { message: "Please choose a category" }
+  validates :alert_threshold, presence: { message: "Please enter a value for threshold" }, numericality: { greater_than: 0, message: "Please enter a positive value for threshold" }
+  validates :frequency, presence: { message: "Please choose a frequency" }
+  validates :next_pay_date, presence: { message: "Please choose the next pay date" }
 
-  default_scope order: 'reminders.next_pay_date'
+  FREQ = {
+          0 => 'Once',
+          1 => 'Monthly',
+          4 => 'Quaterly',
+         12 =>'Yearly' }
 
-  FREQ = [['--------', -1],
-          ['Once', 0],
-          ['Monthly', 1],
-          ['Quaterly', 4],
-          ['Yearly', 12]]
+  CATEGORY = {
+               1 => 'Food',
+               2 => 'Electricity Bill',
+               3 => 'Phone Bill',
+               4 => 'Health',
+               5 => 'Transportaion',
+               6 => 'Leisure',
+               7 => 'Others' }
 
-  CATEGORY = [['-----------', 0],
-              ['Electricity Bill',1],
-              ['Phone Bill', 2],
-              ['Health', 3],
-              ['Transportaion',4],
-              ['Leisure', 5],
-              ['Food', 6],
-              ['Others', 7]]
+  default_scope order('next_pay_date')
 
-  CATEGORY_BY_VALUE = Hash[*CATEGORY.map { |i| [i[1], i[0]] }.flatten]
-  FREQ_BY_VALUE = Hash[*FREQ.map { |i| [i[1], i[0]] }.flatten]
-
+  scope :alerts, where("next_pay_date < DATE( DATE_ADD(NOW(), INTERVAL `alert_threshold` DAY))")
+  
 end

@@ -1,0 +1,38 @@
+  <tr>
+    <td><%= Expense::CATEGORY[expense.category] %></td>
+    <td><%= expense.description %></td>
+    <td>Rs <%= sprintf( "%0.02f", expense.amount) %></td>
+    <td><%= human_datetime(expense.created_at) %></td>
+    <td>
+      <%= link_to 'Edit', edit_expense_path(expense), class: "btn btn-default", "data-toggle" => "modal", :data => {:target => "#edit_expense_modal"} %>
+    </td>
+    <td>
+      <%= link_to 'Delete', expense, method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' } %>
+    </td>
+  </tr>
+  
+<div id="edit_expense_modal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Edit Expense</h4>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("document").ready(function(){
+
+    $('#edit_expense_modal').on('show.bs.modal', function (e) {
+      $('.text-danger').text("");
+    });
+
+    $('#edit_expense_modal').on('hidden.bs.modal', function () {
+      $(this).removeData('bs.modal');
+    });
+
+  });
+</script>

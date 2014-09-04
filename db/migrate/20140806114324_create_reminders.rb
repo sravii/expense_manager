@@ -3,7 +3,7 @@ class CreateReminders < ActiveRecord::Migration
     create_table :reminders do |t|
       t.integer :user_id
       t.string :description
-      t.integer :alert_theshold
+      t.integer :alert_threshold
       t.string :frequency
       t.string :category
       t.boolean :alert_off

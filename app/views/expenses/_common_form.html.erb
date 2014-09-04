@@ -1,0 +1,10 @@
+<span id="expense_amount_error" class="text-danger"></span><br />
+<%= f.label :amount %>
+<%= f.number_field :amount, step: "any", class: 'text_field' %><br />
+
+<span id="expense_created_at_error" class="text-danger"></span><br />
+<%= f.label :created_at, "Date" %>
+<input type = "datetime-local" name = "expense[created_at]" class = "datetime" value = "<%= Time.now.strftime("%Y-%m-%dT%H:%M") %>" id = "datetime"></input><br />
+
+<%= f.label :description %>
+<%= f.text_field :description, class: 'form-control' %><br />

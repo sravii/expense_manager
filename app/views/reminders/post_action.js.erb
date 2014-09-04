@@ -1,0 +1,7 @@
+<% if @item.errors.empty? %>
+	window.location = '<%= reminders_path %>';
+<% else %>
+	<% @item.errors.each do |k,v| %>
+		$('#reminder_<%= k %>_error').text('<%= @item.errors[k][0] %>');
+	<% end %>
+<% end %>

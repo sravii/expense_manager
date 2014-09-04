@@ -1,17 +1,33 @@
 <% provide(:title, 'Expenses') %>
 <h1>Expenses</h1>
 
-<%= render 'expenses/display' %> 
+<%= paginate @items %>
+
+<% if @items.empty? %>
+<br /><br /><h3 class = 'center'>You do not have any expenses to be displayed. <br /><br />You can now start managing your expenditure <br />by adding an expense.</h3><br /><br />
+<% else %>
+<table class="table table-hover">
+  <tr>
+    <th>Category</th>
+    <th>Description</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <%= render @items %> 
+</table>
+<% end %>
 
 <div class="center hero-unit">
   <a href="/expenses/new" 
           class="btn btn-large btn-primary" 
           data-toggle="modal" 
-          data-target="#myModal1">
+          data-target="#add_expense_modal">
       Add a new expense</a>
 </div>
 
-<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="add_expense_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -26,8 +42,12 @@
 <script>
   $("document").ready(function(){
 
-    $('#myModal1').on('show.bs.modal', function (e) {
-      $('.error_msg').text("");
+    $('#add_expense_modal').on('show.bs.modal', function (e) {
+      $('.text-danger').text("");
+    });
+
+    $('#add_expense_modal').on('hidden.bs.modal', function () {
+      $(this).removeData('bs.modal');
     });
 
   });

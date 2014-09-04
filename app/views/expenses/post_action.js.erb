@@ -1,0 +1,8 @@
+
+<% if @item.errors.empty? %>
+	window.location = '<%= expenses_path %>';
+<% else %>
+	<% @item.errors.each do |k,v| %>
+		$('#expense_<%= k %>_error').text('<%= @item.errors[k][0] %>');
+	<% end %>
+<% end %>

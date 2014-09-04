@@ -1,18 +1,18 @@
 <div class="row">
   <div class="span6 offset3">
-    <%= form_for(@expense, controller: "Expenses", action: "update", html: { method: "put", class: 'form-horizontal', role: 'form' }) do |f| %>
-    <%= render 'shared/exp_error_messages' %>
-
-      <span id="error_msg5" class="error_msg"></span><br />
+    <%= form_for(@item, remote: true, controller: "Expenses", action: "update", html: { method: "put", class: 'form-horizontal remote-form', role: 'form' }) do |f| %>
+    
+      <span id="expense_amount_error" class="text-danger"></span><br />
       <%= f.label :amount %>
       <%= f.number_field :amount, class: "text_field", step: "any", :value => (number_with_precision(f.object.amount, :precision => 2) || 0) %><br />
 
-      <span id="error_msg7" class="error_msg"></span><br />
+      <span id="expense_category_error" class="text-danger"></span><br />
       <%= f.label :category %>
-      <%= f.select :category, options_for_select(Expense::CATEGORY, @expense.category) %><br />
+      <%= f.select :category, options_for_select(Expense::CATEGORY.map { |k,v| [v,k] }, @item.category), :include_blank => true %><br />
 
-      <%= f.label :date %><br />
-      <%= f.datetime_select :date %><br />
+      <span id="expense_created_at_error" class="text-danger"></span><br />
+      <%= f.label :created_at, "Date" %>
+      <input type = "datetime-local" name = "expense[created_at]" class = "datetime" value = "<%= @item.created_at.strftime("%Y-%m-%dT%H:%M") %>" id = "edit_datetime"></input><br />
 
       <%= f.label :description %>
       <%= f.text_field :description, class: "form-control" %><br />
@@ -29,24 +29,7 @@
 <script>
   $("document").ready(function(){
     $("form").submit(function(event) {
-
-      $('.error_msg').text("");
-
-      if($("#expense_amount").val() === ''){
-        $("#error_msg5").text("Please enter the amount");
-        event.preventDefault();
-      } 
-
-      if(parseInt($("#expense_amount").val()) <= 0){
-        $("#error_msg5").text("Please enter a positive value for amount");
-        event.preventDefault();
-      }
-
-      if(parseInt($("#expense_category").val()) === 0){
-        $("#error_msg7").text("Please choose a category");
-        event.preventDefault();
-      }  
-        
+      $('.text-danger').text("");
     });
   });
 </script>
